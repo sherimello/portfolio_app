@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:untitled2/pages/achievements.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    RxBool shouldShowAchievements = false.obs;
+    RxBool shouldShowAchievements = false.obs, shouldShouldSkillSets = false.obs;
     var size = Get.size;
     var appBarHeight = AppBar().preferredSize.height;
 
@@ -130,31 +131,12 @@ class Home extends StatelessWidget {
                   )
                 ],
               ),
-              Positioned(
-                bottom: 21,
-                left: 21,
-                right: 21,
-                child: Container(
-                  width: size.width,
-                  height: appBarHeight * .85,
-                  decoration: BoxDecoration(
-                      color: CupertinoColors.systemIndigo,
-                      borderRadius: BorderRadius.circular(1000)),
-                  child: const Center(
-                    child: Text(
-                      "view skill sets",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 28 + appBarHeight * .85,
-                left: 21,
-                right: 21,
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 555),
+                curve: Curves.linearToEaseOut,
+                bottom: shouldShowAchievements.value ? 11 : 28 + appBarHeight * .85,
+                left: shouldShowAchievements.value ? 11 : 21,
+                right: shouldShowAchievements.value ? 11 : 21,
                 child: GestureDetector(
                   onTap: () {
                     shouldShowAchievements.value = !shouldShowAchievements.value;
@@ -163,17 +145,62 @@ class Home extends StatelessWidget {
                     duration: const Duration(milliseconds: 555),
                     curve: Curves.linearToEaseOut,
                     width: size.width,
-                    height: shouldShowAchievements.value ? 300 : appBarHeight * .85,
+                    height: shouldShowAchievements.value ? size.height - appBarHeight - 22 - MediaQuery.of(context).padding.top : appBarHeight * .85,
                     decoration: BoxDecoration(
                         color: shouldShowAchievements.value ? Colors.black : CupertinoColors.systemIndigo,
-                        borderRadius: BorderRadius.circular(1000)),
+                        borderRadius: BorderRadius.circular(shouldShowAchievements.value ? 55 : 1000)),
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AnimatedOpacity(
+                              duration: const Duration(milliseconds: 555),
+                              curve: Curves.linearToEaseOut,
+                              opacity: shouldShowAchievements.value ? 1 : 0,
+                              child: const Achievements()),
+                          AnimatedOpacity(
+                            duration: const Duration(milliseconds: 555),
+                            curve: Curves.linearToEaseOut,
+                            opacity: shouldShowAchievements.value ? 0 : 1,
+                            child: const Text(
+                              "view achievements",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 555),
+                curve: Curves.linearToEaseOut,
+                bottom: shouldShowAchievements.value ? -appBarHeight * 2 : shouldShouldSkillSets.value ? 11 : 21,
+                left: shouldShouldSkillSets.value ? 11 : 21,
+                right: shouldShouldSkillSets.value ? 11 : 21,
+                child: GestureDetector(
+                  onTap: () {
+                    shouldShouldSkillSets.value = !shouldShouldSkillSets.value;
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 555),
+                    curve: Curves.linearToEaseOut,
+                    width: size.width,
+                    height: shouldShouldSkillSets.value ? size.height - 22 - MediaQuery.of(context).padding.top  - appBarHeight: appBarHeight * .85,
+                    decoration: BoxDecoration(
+                        color: shouldShouldSkillSets.value ? Colors.black : CupertinoColors.systemIndigo,
+                        borderRadius: BorderRadius.circular(shouldShouldSkillSets.value ? 55 : 1000)),
                     child: Center(
                       child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 555),
                         curve: Curves.linearToEaseOut,
-                        opacity: shouldShowAchievements.value ? 0 : 1,
+                        opacity: shouldShouldSkillSets.value ? 0 : 1,
                         child: const Text(
-                          "view achievements",
+                          "view skill sets",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w900,
